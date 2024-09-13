@@ -17,8 +17,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        $this->postrepository->index();
+        $post = $this->postrepository->index();
+        return view('posts.index', ['post' => $post]);
     }
+    
+
 
     /**
      * Show the form for creating a new resource.
@@ -34,7 +37,7 @@ class PostController extends Controller
     public function store(PostRequest $request)
     {
         $this->postrepository->store($request->all());
-        return view('posts');
+        return back();
     }
 
     /**
@@ -50,7 +53,8 @@ class PostController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $post = $this->postrepository->find($id);
+        return view('posts.edit', compact('post'));
     }
 
     /**
@@ -58,7 +62,8 @@ class PostController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $post = $this->postrepository->update($request->all(), $id);
+        return view("posts.index");
     }
 
     /**
@@ -66,6 +71,7 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $this->postrepository->destory($id);
+        return back();
     }
 }

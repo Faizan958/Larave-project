@@ -4,6 +4,7 @@
     <title>Login</title>
 </head>
 <body>
+    
     <form action="{{route('posts.store')}}" method="POST">
         @csrf
         <div>

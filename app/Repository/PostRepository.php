@@ -12,11 +12,31 @@ class PostRepository implements PostRepositoryInterface
     }
 
     public function index(){
-        return $this->post::all();
+{
+    return Post::with('user')->get();
+}
     }
 
     public function store(array $data){
         return $this->post::create($data);
+    }
+
+    public function find($id)
+    {
+        return $this->post::findOrFail($id);
+    }
+
+    public function update(array $data,$id)
+    {
+        $post = $this->post::findOrFail($id);
+        $post->update($data);
+        return $post;
+
+    }
+    public function destory($id){
+        $post = $this->post::find($id);
+        $post->delete();
+        return $post;
     }
 }
 ?>

@@ -6,8 +6,10 @@ use App\Models\User;
 use App\Repository\Interface\AuthenticationRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Exception;
 
-class Authentication implements AuthenticationRepositoryInterface
+class AuthenticationRepository implements AuthenticationRepositoryInterface
 {
     protected $user;
 
@@ -18,14 +20,29 @@ class Authentication implements AuthenticationRepositoryInterface
 
     public function register(array $data)
     {
-        return $this->user::create($data);
+        try{
+        DB::beginTransaction();
+        $user =$this->user::create($data);
+        DB::commit();
+        return $user;
+        }catch(Exception $e){
+        DB::rollBack();
+        throw new \RuntimeException($e->getMessage());
+
+        }
+        
     }
 
     public function login(array $credentials)
     {
-        return Auth::attempt($credentials);
+        try{
+        $login = Auth::attempt($credentials);
+        return $login;
+        }catch (Exception $e){
+        throw new \RuntimeException($e->getMessage());
+        }
     }
-
+    
     public function logout(){
         return Auth::logout();
     }
